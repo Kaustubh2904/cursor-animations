@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raindrop Cursor Effect</title>
+    <style>
+        body {
+            cursor: none;
+            background-color: #c4d80e;
+            color: #c21919;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #outer-shape, #inner-circle {
+            position: fixed;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+        }
+
+        #outer-shape {
+            width: 40px;
+            height: 40px;
+            background-color: #10be00;
+            border-radius: 50%;
+            transition: all 0.1s ease;
+            opacity: 0.5;
+        }
+
+        #inner-circle {
+            width: 10px;
+            height: 10px;
+            background-color: #f0f0f1;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Move your mouse around</h1>
+    <div id="outer-shape"></div>
+    <div id="inner-circle"></div>
+
+    <script>
+        const outerShape = document.getElementById('outer-shape');
+        const innerCircle = document.getElementById('inner-circle');
+        let mouseX = 0, mouseY = 0;
+        let outerX = 0, outerY = 0;
+        let lastMouseX = 0, lastMouseY = 0;
+        let speed = 0;
+        let dx = 0, dy = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            innerCircle.style.left = `${mouseX}px`;
+            innerCircle.style.top = `${mouseY}px`;
+
+            dx = mouseX - lastMouseX;
+            dy = mouseY - lastMouseY;
+            speed = Math.sqrt(dx * dx + dy * dy);
+
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        });
+
+        function updateOuterShape() {
+            const targetDx = mouseX - outerX;
+            const targetDy = mouseY - outerY;
+
+            outerX += targetDx * 0.4;
+            outerY += targetDy * 0.4;
+
+            outerShape.style.left = `${outerX}px`;
+            outerShape.style.top = `${outerY}px`;
+
+            const baseSize = 40;
+            const maxElongation = 40;
+            const elongation = Math.min(speed, maxElongation);
+            
+            const angle = Math.atan2(dy, dx);
+
+            const width = baseSize;
+            const height = baseSize + elongation;
+
+            if (speed > 5) {
+                // Raindrop shape
+                outerShape.style.width = `${width}px`;
+                outerShape.style.height = `${height}px`;
+                outerShape.style.borderRadius = `${width / 2}px ${width / 2}px ${width / 2}px ${width / 2}px / ${width / 2}px ${width / 2}px ${height / 2}px ${height / 2}px`;
+                outerShape.style.transform = `translate(-50%, -50%) rotate(${angle + Math.PI / 2}rad)`;
+            } else {
+                // Circle shape
+                outerShape.style.width = `${baseSize}px`;
+                outerShape.style.height = `${baseSize}px`;
+                outerShape.style.borderRadius = '50%';
+                outerShape.style.transform = 'translate(-50%, -50%)';
+            }
+
+            speed *= 0.4;
+
+            requestAnimationFrame(updateOuterShape);
+        }
+
+        updateOuterShape();
+    </script>
+</body>
+</html>

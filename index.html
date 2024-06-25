@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precise Custom Cursor Effect</title>
+    <style>
+        body {
+            cursor: none;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cursor-outer {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cursor-inner {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Move your mouse around</h1>
+    <div id="cursor-outer">
+        <div id="cursor-inner"></div>
+    </div>
+
+    <script>
+        const cursorOuter = document.getElementById('cursor-outer');
+        const cursorInner = document.getElementById('cursor-inner');
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            cursorOuter.style.left = `${x - 20}px`;
+            cursorOuter.style.top = `${y - 20}px`;
+            
+            cursorInner.style.left = `${20 - 2.5}px`;
+            cursorInner.style.top = `${20 - 2.5}px`;
+        });
+    </script>
+</body>
+</html>

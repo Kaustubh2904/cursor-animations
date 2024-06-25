@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Following Circles</title>
+    <style>
+        body {
+            cursor: none;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #outer-circle, #inner-circle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        #outer-circle {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ffffff;
+        }
+
+        #inner-circle {
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Move your mouse around</h1>
+    <div id="outer-circle"></div>
+    <div id="inner-circle"></div>
+
+    <script>
+        const outerCircle = document.getElementById('outer-circle');
+        const innerCircle = document.getElementById('inner-circle');
+        let mouseX = 0, mouseY = 0;
+        let outerX = 0, outerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update inner circle (mouse pointer) position
+            innerCircle.style.transform = `translate(${mouseX - 0}px, ${mouseY - 0}px)`;
+        });
+
+        function updateOuterCircle() {
+            // Calculate the distance between outer circle and mouse position
+            const dx = mouseX - outerX;
+            const dy = mouseY - outerY;
+
+            // Move outer circle 10% of the distance to the mouse position
+            outerX += dx * 0.1;
+            outerY += dy * 0.1;
+
+            // Update outer circle position
+            outerCircle.style.transform = `translate(${outerX - 0}px, ${outerY - 0}px)`;
+
+            requestAnimationFrame(updateOuterCircle);
+        }
+
+        updateOuterCircle();
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Tailing Cursor Effect</title>
+    <style>
+        body {
+            cursor: none;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #outer-circle, #inner-circle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #outer-circle {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ffffff;
+            transition: width 0.1s, height 0.1s;
+        }
+
+        #inner-circle {
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Move your mouse around</h1>
+    <div id="outer-circle"></div>
+    <div id="inner-circle"></div>
+
+    <script>
+        const outerCircle = document.getElementById('outer-circle');
+        const innerCircle = document.getElementById('inner-circle');
+        let mouseX = 0, mouseY = 0;
+        let outerX = 0, outerY = 0;
+        let lastMouseX = 0, lastMouseY = 0;
+        let speed = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update inner circle (mouse pointer) position
+            innerCircle.style.left = `${mouseX}px`;
+            innerCircle.style.top = `${mouseY}px`;
+
+            // Calculate speed
+            const dx = mouseX - lastMouseX;
+            const dy = mouseY - lastMouseY;
+            speed = Math.sqrt(dx * dx + dy * dy);
+
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        });
+
+        function updateOuterCircle() {
+            // Calculate the distance between outer circle and mouse position
+            const dx = mouseX - outerX;
+            const dy = mouseY - outerY;
+
+            // Move outer circle a fraction of the distance to the mouse position
+            outerX += dx * 0.15;
+            outerY += dy * 0.15;
+
+            // Update outer circle position
+            outerCircle.style.left = `${outerX}px`;
+            outerCircle.style.top = `${outerY}px`;
+
+            // Change shape based on speed
+            const baseSize = 40;
+            const maxElongation = 30;
+            const elongation = Math.min(speed, maxElongation);
+            const angle = Math.atan2(dy, dx);
+
+            const width = baseSize + elongation;
+            const height = baseSize;
+
+            outerCircle.style.width = `${width}px`;
+            outerCircle.style.height = `${height}px`;
+            outerCircle.style.transform = `translate(-50%, -50%) rotate(${angle}rad)`;
+
+            requestAnimationFrame(updateOuterCircle);
+        }
+
+        updateOuterCircle();
+    </script>
+</body>
+</html>
